@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJuYmYiOjE1NDQ5NzEyNzUsImV4cCI6MTU0NTU3NjA3NSwiaWF0IjoxNTQ0OTcxMjc1fQ.AbkKkUulLHm7aCHnQdugFMwiRAG3J8PI4b7Q2aViF_g";
+       //Fuente: https://developer.wordpress.com/docs/rest-api-javascript/
+       jQuery.ajax({
+           url: 'http://localhost:50221/api/users/',
+           type: 'GET',
+           data: { content: 'testing test' },
+           beforeSend: function (xhr) {
+               xhr.setRequestHeader("Authorization", "BEARER " + access_token);
+           },
+           success: function (response) {
+               // response
+               alert("Holaa-exito");
+           },
+           error: function (request, status, error) {
+               alert("Holaa-error");
+           }
+       });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
