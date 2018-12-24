@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PruebaTecnicaCi2.Service
 {
-    public interface IUserService
+    public interface IUsuarioService
     {
-        User Authenticate(string username, string password);
-        IEnumerable<User> GetAll();
+        Usuario Authenticate(string username, string password);
+        IEnumerable<Usuario> GetAll();
     }
 
 }

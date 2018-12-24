@@ -3,8 +3,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PruebaTecnicaCi2.Model;
 using PruebaTecnicaCi2.Utilidades;
-using PruebaTecnicaCi2Libreria2018.Contextos;
-using PruebaTecnicaCi2Libreria2018.Modelos;
+using Libreria.Contextos;
+using Libreria.Modelos;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace PruebaTecnicaCi2.Service
 {
-    public class UserService : IUserService
+    public class UsuarioService : IUsuarioService
     {
         #region Constantes
 
@@ -23,13 +23,13 @@ namespace PruebaTecnicaCi2.Service
 
         private readonly AppSettings _appSettings;
 
-        public List<User> _users { get; }
+        public List<Usuario> _users { get; }
 
         #endregion
 
         #region Constructores
 
-        public UserService(DbContextOptions<ContextoDeDatos> opciones, IOptions<AppSettings> appSettings)
+        public UsuarioService(DbContextOptions<ContextoDeDatos> opciones, IOptions<AppSettings> appSettings)
         {
             _opciones = opciones;
             _appSettings = appSettings.Value;
@@ -42,7 +42,7 @@ namespace PruebaTecnicaCi2.Service
         #endregion
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
 
-        public User Authenticate(string username, string password)
+        public Usuario Authenticate(string username, string password)
         {
             var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
 
@@ -62,27 +62,25 @@ namespace PruebaTecnicaCi2.Service
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
 
             // remove password before returning
             user.Password = null;
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<Usuario> GetAll()
         {
             // return users without passwords
             return _users.Select(x => { x.Password = null; return x; });
         }
 
-        public List<User> ObtenerUsuarios(List<Usuarios> usuarios)
+        public List<Usuario> ObtenerUsuarios(List<Usuarios> usuarios)
         {
-            return usuarios.Select(u => new User
+            return usuarios.Select(u => new Usuario
             {
-                FirstName = u.FirstName,
+                Nombres = u.Nombres,
                 Id = u.Id,
-                LastName = u.LastName,
-                Token = u.Token,
+                Apellidos = u.Apellidos,
                 Username = u.Username
             }).ToList();
         }

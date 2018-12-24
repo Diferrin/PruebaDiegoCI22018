@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PruebaTecnicaCi2Libreria2018.Migrations
+namespace Libreria.Migrations
 {
-    public partial class CreacionDeLaBaseDeDatos : Migration
+    public partial class inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,28 +29,30 @@ namespace PruebaTecnicaCi2Libreria2018.Migrations
                 name: "Tareas",
                 columns: table => new
                 {
-                    GuTareaId = table.Column<Guid>(nullable: false),
-                    StrDescripcion = table.Column<string>(maxLength: 200, nullable: true),
-                    DatFechaCreacion = table.Column<DateTime>(nullable: false),
-                    DatFechaVencimineto = table.Column<DateTime>(nullable: false),
-                    BolEstado = table.Column<bool>(nullable: false),
-                    IntFkUserId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Descripcion = table.Column<string>(maxLength: 200, nullable: true),
+                    FechaCreacion = table.Column<DateTime>(nullable: false),
+                    FechaVencimineto = table.Column<DateTime>(nullable: false),
+                    Estado = table.Column<bool>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false),
+                    Objetivo = table.Column<string>(maxLength: 50, nullable: true),
+                    NumeroActividades = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tareas", x => x.GuTareaId);
+                    table.PrimaryKey("PK_Tareas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tareas_Usuarios_IntFkUserId",
-                        column: x => x.IntFkUserId,
+                        name: "FK_Tareas_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tareas_IntFkUserId",
+                name: "IX_Tareas_UsuarioId",
                 table: "Tareas",
-                column: "IntFkUserId");
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

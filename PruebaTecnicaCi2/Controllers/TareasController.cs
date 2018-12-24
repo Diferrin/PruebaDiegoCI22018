@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaCi2.Model;
 using PruebaTecnicaCi2.Service;
-using PruebaTecnicaCi2Libreria2018.Modelos;
-using PruebaTecnicaCi2Libreria2018.Repositorio.Interfaces;
-using PruebaTecnicaCi2Libreria2018.Utilidades;
+using Libreria.Modelos;
+using Libreria.Repositorio.Interfaces;
 
 namespace PruebaTecnicaCi2.Controllers
 {
@@ -18,91 +17,91 @@ namespace PruebaTecnicaCi2.Controllers
     {
         #region Constantes
 
-        private readonly ITareaRepositorio _ITareaRepositorio;
+        private readonly ITareaRepositorio _repositorio;
 
-        private IUserService _userService;
+        private IUsuarioService _servicio;
         
         #endregion
 
         #region Constructores
 
-        public TareasController(ITareaRepositorio tareaRepositorio, IUserService userService)
+        public TareasController(ITareaRepositorio tareaRepositorio, IUsuarioService userService)
         {
-            _ITareaRepositorio = tareaRepositorio;
-            _userService = userService;
+            _repositorio = tareaRepositorio;
+            _servicio = userService;
         }
 
         #endregion
 
-        /// <summary>
-        /// Metodo que lista las tareas registradas de acuerdo a los criterios deseados
-        /// </summary>
-        /// <param name="intTodas">ID del usuario (autor); 0 en caso de listar las tareas de todos los usuarios</param>
-        /// <param name="strTodasPorEstado">tipo de filtro para estado; 1 terminada, 2 NO terminada, default todas las tareas</param>
-        /// <returns>Listado de tareas con los filtros deseados</returns>
-        [HttpGet("{intTodas}/{strTodasPorEstado}")]
-        public async Task<ActionResult<IEnumerable<Tarea>>> Consultar([FromHeader] int intTodas, string strTodasPorEstado)
+        [HttpGet("ObtenerTaresa/{todos}/{estado}")]
+        public async Task<ActionResult<IEnumerable<Tarea>>> Consultar( int todos, bool estado)
         {
-            return await _ITareaRepositorio.ObtenerListadodeTareas(intTodas, strTodasPorEstado);
+            return await _repositorio.ObtenerListadodeTareas(todos, estado);
         }
 
-        [HttpPost("{modeloDeTarea}")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Tarea>>> Consultar()
+        {
+            return await _repositorio.ObtenerListadodeTareas(1, true);
+        }
+
+        [HttpPost("crearTarea")]
         public async Task<ActionResult<Tarea>> Crear([FromBody] TareaModel modeloDeTarea)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    return await _ITareaRepositorio.AgregarTarea(ObtenerTareaDominio(modeloDeTarea));
+                    return await _repositorio.AgregarTarea(ObtenerTareaDominio(modeloDeTarea));
                 }
 
-                return BadRequest(ModelState);
+                throw new Exception();
             }
             catch (Exception)
             {
-                return NotFound();
+                throw new Exception();
             }
         }
 
-        [HttpPost("{strTareaId}")]
-        public async Task<ActionResult<Tarea>> Actualizar([FromBody] TareaModelActualizar modeloDeTarea, string strTareaId)
+        [HttpPost("editarTarea")]
+        public async Task<ActionResult<Tarea>> Actualizar([FromBody] TareaModelActualizar TareaModelo, string IdTarea)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
-                var tareaAModificar = await _ITareaRepositorio.ObtenerTareaPorId(new Guid(strTareaId));
+                var tareaAModificar = await _repositorio.ObtenerTareaPorId(new Guid(IdTarea));
                 
-                if (tareaAModificar != null && tareaAModificar.GuTareaId == new Guid(strTareaId))
+                if (tareaAModificar != null && tareaAModificar.Id == new Guid(IdTarea))
                 {
-                    return await _ITareaRepositorio.ActualizarTarea(ObtenerTareaDominioParaActualizar(modeloDeTarea));
+                    return await _repositorio.ActualizarTarea(ObtenerTareaDominioParaActualizar(TareaModelo));
                 }
                 else
                 {
-                    return BadRequest(new { message = "Datos incorrectos." });
+                    throw new Exception();
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                throw new Exception();
             }
         }
 
-        [HttpPost("{strTareaId}")]
-        public async Task Borrar(string strTareaId)
+        [HttpPost("borrarTarea/{id}")]
+        public async Task Borrar(string id)
         {
-            await _ITareaRepositorio.BorrarTarea(strTareaId);
+            await _repositorio.BorrarTarea(id);
         }
 
         private Tarea ObtenerTareaDominio(TareaModel modelo)
         {
             return new Tarea
             {
-                BolEstado = Constantes.EstadoTareaNoTerminada,
-                DatFechaCreacion = DateTime.Now,
-                DatFechaVencimineto = modelo.FechaVencimiento,
-                GuTareaId = Guid.NewGuid(),
-                IntFkUserId = modelo.UsuarioId,
-                StrDescripcion = modelo.Descripcion
+                Estado = false,
+                FechaCreacion = DateTime.Now,
+                FechaVencimineto = modelo.FechaVencimiento,
+                Id = Guid.NewGuid(),
+                UsuarioId = modelo.UsuarioId,
+                Descripcion = modelo.Descripcion
             };
         }
 
@@ -110,12 +109,12 @@ namespace PruebaTecnicaCi2.Controllers
         {
             return new Tarea
             {
-                BolEstado = modelo.BolEstado,
-                DatFechaCreacion = modelo.DatFechaCreacion,
-                DatFechaVencimineto = modelo.FechaVencimiento,
-                GuTareaId = modelo.GuTareaId,
-                IntFkUserId = modelo.UsuarioId,
-                StrDescripcion = modelo.Descripcion
+                Estado = modelo.Estado,
+                FechaCreacion = modelo.FechaCreacion,
+                FechaVencimineto = modelo.FechaVencimiento,
+                Id = modelo.GuTareaId,
+                UsuarioId = modelo.UsuarioId,
+                Descripcion = modelo.Descripcion
             };
         }
     }

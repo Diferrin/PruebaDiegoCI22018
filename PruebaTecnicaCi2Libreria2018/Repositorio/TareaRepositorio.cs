@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PruebaTecnicaCi2Libreria2018.Contextos;
-using PruebaTecnicaCi2Libreria2018.Modelos;
-using PruebaTecnicaCi2Libreria2018.Repositorio.Interfaces;
-using PruebaTecnicaCi2Libreria2018.Utilidades;
+using Libreria.Contextos;
+using Libreria.Modelos;
+using Libreria.Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PruebaTecnicaCi2Libreria2018.Repositorio
+namespace Libreria.Repositorio
 {
     public class TareaRepositorio : ITareaRepositorio
     {
@@ -33,7 +32,7 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
 
         #endregion
 
-        public async Task<List<Tarea>> ObtenerListadodeTareas(int intTodas, string strTodasPorEstado)
+        public async Task<List<Tarea>> ObtenerListadodeTareas(int todos, bool estado)
         {
             try
             {
@@ -41,21 +40,21 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
                 {
                     IQueryable<Tarea> tareas = contexto.Tareas;
 
-                    if (intTodas != 0)
+                    if (todos != 0)
                     {
-                        tareas.Where(t => t.IntFkUserId == intTodas);
+                        tareas.Where(t => t.UsuarioId == todos);
                     }
 
-                    if (strTodasPorEstado == "1")
+                    if (estado)
                     {
-                        tareas.Where(t => t.BolEstado == Constantes.EstadoTareaTerminada);
+                        tareas.Where(t => t.Estado == true);
                     }
-                    else if (strTodasPorEstado == "2")
+                    else if (!estado)
                     {
-                        tareas.Where(t => t.BolEstado == Constantes.EstadoTareaNoTerminada);
+                        tareas.Where(t => t.Estado == false);
                     }
 
-                    tareas.OrderBy(t => t.DatFechaVencimineto);
+                    tareas.OrderBy(t => t.FechaVencimineto);
                     return await tareas.AsNoTracking().ToListAsync();
                 }
             }
@@ -77,9 +76,9 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
                         await contexto.SaveChangesAsync();
                         return tareaAInsertar;
                     }
-                    catch (DbUpdateConcurrencyException errorDeConcurrencia)
+                    catch (DbUpdateConcurrencyException exepcion)
                     {
-                        throw errorDeConcurrencia;
+                        throw exepcion;
                     }
                     catch (DbUpdateException errorAlGuardar)
                     {
@@ -95,7 +94,7 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
 
         public async Task<Tarea> ActualizarTarea(Tarea objTareaAModificar)
         {
-            if (objTareaAModificar == null || objTareaAModificar.GuTareaId == Guid.Empty)
+            if (objTareaAModificar == null || objTareaAModificar.Id == Guid.Empty)
             {
                 throw new ArgumentNullException();
             }
@@ -139,7 +138,7 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
                 {
                     try
                     {
-                        var objTareaABorrar = await contexto.Tareas.AsNoTracking().FirstOrDefaultAsync(t => t.GuTareaId == new Guid(strTareaId));
+                        var objTareaABorrar = await contexto.Tareas.AsNoTracking().FirstOrDefaultAsync(t => t.Id == new Guid(strTareaId));
 
                         if (objTareaABorrar != null)
                         {
@@ -170,7 +169,7 @@ namespace PruebaTecnicaCi2Libreria2018.Repositorio
                 using (var contexto = new ContextoDeDatos(_opciones))
                 {
                     IQueryable<Tarea> tareas = contexto.Tareas;                    
-                    return await tareas.AsNoTracking().FirstOrDefaultAsync(t => t.GuTareaId == guTareaId);
+                    return await tareas.AsNoTracking().FirstOrDefaultAsync(t => t.Id == guTareaId);
                 }
             }
             catch (SqlException errorDeConexion)

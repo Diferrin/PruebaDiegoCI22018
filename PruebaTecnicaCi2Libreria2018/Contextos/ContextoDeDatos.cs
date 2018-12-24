@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using PruebaTecnicaCi2Libreria2018.Modelos;
+using Libreria.Modelos;
 
-namespace PruebaTecnicaCi2Libreria2018.Contextos
+namespace Libreria.Contextos
 {
     /// <summary>
     /// Clase utilizada para representar el contexto de datos de la aplicacion
@@ -29,7 +29,7 @@ namespace PruebaTecnicaCi2Libreria2018.Contextos
             ContextoDeDatos IDesignTimeDbContextFactory<ContextoDeDatos>.CreateDbContext(string[] args)
             {
                 var optionsBuilder = new DbContextOptionsBuilder<ContextoDeDatos>();
-                optionsBuilder.UseSqlServer("Server = ABU-OPEDESA\\SQLEXPRESS; Database = TareasCi2; Trusted_Connection = True; MultipleActiveResultSets = true");
+                optionsBuilder.UseSqlServer("Server=DIEGO-FERRIN-PC;Database=ci2Bd;Trusted_Connection=True;");
                 return new ContextoDeDatos(optionsBuilder.Options);
             }
         }
@@ -39,8 +39,8 @@ namespace PruebaTecnicaCi2Libreria2018.Contextos
         protected override void OnModelCreating(ModelBuilder constructorDelModelo)
         {
             constructorDelModelo.Entity<Usuarios>().HasMany(u => u.ColTarea)
-                                               .WithOne(t => t.ObjUser)
-                                               .HasForeignKey(t => t.IntFkUserId)
+                                               .WithOne(t => t.Usuario)
+                                               .HasForeignKey(t => t.UsuarioId)
                                                .OnDelete(DeleteBehavior.Restrict);
         }
     }

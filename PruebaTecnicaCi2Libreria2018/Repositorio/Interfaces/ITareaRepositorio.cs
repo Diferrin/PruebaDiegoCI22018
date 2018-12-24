@@ -1,20 +1,20 @@
-﻿using PruebaTecnicaCi2Libreria2018.Modelos;
+﻿using Libreria.Modelos;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PruebaTecnicaCi2Libreria2018.Repositorio.Interfaces
+namespace Libreria.Repositorio.Interfaces
 {
     public interface ITareaRepositorio
     {
-        Task<List<Tarea>> ObtenerListadodeTareas(int intTodas, string strTodasPorEstado);
+        Task<List<Tarea>> ObtenerListadodeTareas(int todas, bool estado);
 
-        Task<Tarea> AgregarTarea(Tarea tareaAInsertar);
+        Task<Tarea> AgregarTarea(Tarea tarea);
 
-        Task<Tarea> ActualizarTarea(Tarea tareaAInsertar);
+        Task<Tarea> ActualizarTarea(Tarea tarea);
 
-        Task BorrarTarea(string strTareaId);
+        Task BorrarTarea(string id);
 
         Task<Tarea> ObtenerTareaPorId(Guid guTareaId);
     }

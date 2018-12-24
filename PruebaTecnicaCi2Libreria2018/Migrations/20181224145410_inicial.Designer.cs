@@ -5,46 +5,46 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PruebaTecnicaCi2Libreria2018.Contextos;
+using Libreria.Contextos;
 
-namespace PruebaTecnicaCi2Libreria2018.Migrations
+namespace Libreria.Migrations
 {
     [DbContext(typeof(ContextoDeDatos))]
-    [Migration("20181222235241_AgregadoDeCamposEnTablaTareas")]
-    partial class AgregadoDeCamposEnTablaTareas
+    [Migration("20181224145410_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("PruebaTecnicaCi2Libreria2018.Modelos.Tarea", b =>
                 {
-                    b.Property<Guid>("GuTareaId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BolEstado");
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(200);
 
-                    b.Property<DateTime>("DatFechaCreacion");
+                    b.Property<bool>("Estado");
 
-                    b.Property<DateTime>("DatFechaVencimineto");
+                    b.Property<DateTime>("FechaCreacion");
 
-                    b.Property<int>("IntFkUserId");
+                    b.Property<DateTime>("FechaVencimineto");
 
                     b.Property<int>("NumeroActividades");
 
                     b.Property<string>("Objetivo")
                         .HasMaxLength(50);
 
-                    b.Property<string>("StrDescripcion")
-                        .HasMaxLength(200);
+                    b.Property<int>("UsuarioId");
 
-                    b.HasKey("GuTareaId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("IntFkUserId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Tareas");
                 });
@@ -72,9 +72,9 @@ namespace PruebaTecnicaCi2Libreria2018.Migrations
 
             modelBuilder.Entity("PruebaTecnicaCi2Libreria2018.Modelos.Tarea", b =>
                 {
-                    b.HasOne("PruebaTecnicaCi2Libreria2018.Modelos.Usuarios", "ObjUser")
+                    b.HasOne("PruebaTecnicaCi2Libreria2018.Modelos.Usuarios", "Usuario")
                         .WithMany("ColTarea")
-                        .HasForeignKey("IntFkUserId")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

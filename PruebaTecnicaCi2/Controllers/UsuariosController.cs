@@ -12,20 +12,20 @@ namespace PruebaTecnicaCi2.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsuariosController : ControllerBase
     {
-        private IUserService _userService;
+        private IUsuarioService _usuarioService;
 
-        public UsersController(IUserService userService)
+        public UsuariosController(IUsuarioService usuarioService)
         {
-            _userService = userService;
+            _usuarioService = usuarioService;
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        [HttpPost("autenticar")]
+        public IActionResult Autenticar([FromBody]Usuario userParam)
         {
-            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+            var user = _usuarioService.Authenticate(userParam.Username, userParam.Password);
             if (user == null) return BadRequest(new { message = "El nombre de usuario o contraseña incorrecta." });
             return Ok(user);
         }
@@ -33,7 +33,7 @@ namespace PruebaTecnicaCi2.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
+            var users = _usuarioService.GetAll();
             return Ok(users);
         }
     }

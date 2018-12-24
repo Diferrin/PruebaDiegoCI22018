@@ -8,9 +8,9 @@ namespace PruebaTecnicaCi2.Model
 {
     public class TareaModelActualizar : TareaModel
     {
-        public bool BolEstado { get; set; }
+        public bool Estado { get; set; }
 
-        public DateTime DatFechaCreacion { get; set; }
+        public DateTime FechaCreacion { get; set; }
 
         public Guid GuTareaId { get; set; }        
     }

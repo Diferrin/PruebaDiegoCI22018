@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PruebaTecnicaCi2.Service;
 using PruebaTecnicaCi2.Utilidades;
-using PruebaTecnicaCi2Libreria2018.Contextos;
-using PruebaTecnicaCi2Libreria2018.Repositorio;
-using PruebaTecnicaCi2Libreria2018.Repositorio.Interfaces;
+using Libreria.Contextos;
+using Libreria.Repositorio;
+using Libreria.Repositorio.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Text;
 
 namespace PruebaTecnicaCi2
 {
@@ -47,7 +41,7 @@ namespace PruebaTecnicaCi2
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes("");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,16 +61,28 @@ namespace PruebaTecnicaCi2
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<ITareaRepositorio, TareaRepositorio>();
-            services.AddDbContextPool<ContextoDeDatos>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServerCi2")));
+
+            services.AddDbContext<ContextoDeDatos>(options => options.UseSqlServer(Configuration.GetConnectionString("ci2Database")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+                // specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
+
                 app.UseDeveloperExceptionPage();
             }
 

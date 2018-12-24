@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaCi2Libreria2018\PruebaTecnicaCi2Libreria2018.csproj" />
+    <ProjectReference Include="..\PruebaTecnicaCi2Libreria2018\Libreria.csproj" />
   </ItemGroup>
 
 </Project>

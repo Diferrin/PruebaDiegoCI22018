@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace PruebaTecnicaCi2Libreria2018.Modelos
+namespace Libreria.Modelos
 {
     /// <summary>
     /// Clase utilizada para representar el modelo de una tarea en la base de datos
@@ -9,21 +9,20 @@ namespace PruebaTecnicaCi2Libreria2018.Modelos
     public class Tarea
     {
         [Key]
-        public Guid GuTareaId { get; set; }
+        public Guid Id { get; set; }
 
-        [StringLength(200)]
-        public string StrDescripcion { get; set; }
+        public string Descripcion { get; set; }
 
-        public DateTime DatFechaCreacion { get; set; }
+        public DateTime FechaCreacion { get; set; }
 
-        public DateTime DatFechaVencimineto { get; set; }
+        public DateTime FechaVencimineto { get; set; }
 
-        public bool BolEstado { get; set; }
+        public bool Estado { get; set; }
 
-        public int IntFkUserId { get; set; }
-        public Usuarios ObjUser { get; set; }
+        public int UsuarioId { get; set; }
+        public Usuarios Usuario { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string Objetivo { get; set; }
 
         [Range(1, 10)]
